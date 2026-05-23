@@ -94,3 +94,36 @@ th {
 tbody tr:hover {
   background-color: #2a2a2a;
 }
+/* --- WEEKEND SCHEDULE STYLING --- */
+.schedule-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  background-color: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #e10600; /* F1 Red accent */
+}
+
+.session {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: #cccccc;
+  border-bottom: 1px dashed #444;
+  padding-bottom: 0.4rem;
+}
+
+/* Remove the dashed border from the last item so it looks clean */
+.session:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.session span {
+  font-weight: bold;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
