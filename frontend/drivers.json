@@ -1,0 +1,7 @@
+[
+  { "rank": 1, "name": "Kimi Antonelli", "team": "Mercedes", "points": 100 },
+  { "rank": 2, "name": "George Russell", "team": "Mercedes", "points": 80 },
+  { "rank": 3, "name": "Charles Leclerc", "team": "Ferrari", "points": 59 },
+  { "rank": 4, "name": "Lando Norris", "team": "McLaren", "points": 51 },
+  { "rank": 5, "name": "Lewis Hamilton", "team": "Ferrari", "points": 51 }
+]

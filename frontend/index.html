@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apex F1 Pulse</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="assests/favicon.png" />
+  </head>
+  <body>
+    <main class="dashboard">
+      <!-- COUNTDOWN SECTION -->
+      <section class="hero-card">
+        <h2>Next Grand Prix Countdown</h2>
+        <div id="countdown-clock">Loading timer...</div>
+      </section>
+
+      <!-- DATA TABLE SECTION -->
+      <section class="stats-card">
+        <div class="table-header">
+          <h3>Driver Standings</h3>
+          <input
+            type="text"
+            id="search-bar"
+            placeholder="Search driver or team..."
+          />
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Driver</th>
+              <th>Team</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <!-- JS will inject data right here -->
+          <tbody id="driver-rows"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
