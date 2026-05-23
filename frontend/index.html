@@ -13,6 +13,7 @@
       <section class="hero-card">
         <h2>Next Grand Prix Countdown</h2>
         <h3 class="race-title">Canadian Grand Prix</h3>
+        <p id="circuit-info" class="circuit-text"></p>
         <div id="countdown-clock">Loading timer...</div>
         <div id="weekend-schedule" class="schedule-container"></div>
       </section>
@@ -39,6 +40,25 @@
           </thead>
           <!-- JS will inject data right here -->
           <tbody id="driver-rows"></tbody>
+        </table>
+      </section>
+
+      <!-- TEAM CONSTRUCTOR STANDINGS CARD -->
+      <section class="stats-card" style="margin-top: 2rem">
+        <div class="table-header">
+          <h3>Constructor Standings</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 15%">Rank</th>
+              <th style="width: 60%">Team</th>
+              <th style="width: 25%">Points</th>
+            </tr>
+          </thead>
+          <tbody id="team-rows">
+            <!-- JavaScript will inject constructor rows here -->
+          </tbody>
         </table>
       </section>
     </main>

@@ -23,6 +23,17 @@ def get_drivers():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/constructors', methods=['GET'])
+def get_constructors():
+    try:
+        # Fetch the official constructor standing numbers for the 2026 season
+        url = "https://api.jolpi.ca/ergast/f1/2026/constructorStandings.json"
+        response = requests.get(url)
+        data = response.json()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     # Run the server on port 5000
     app.run(debug=True, port=5000)

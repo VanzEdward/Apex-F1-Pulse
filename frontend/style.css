@@ -127,3 +127,10 @@ tbody tr:hover {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+.circuit-text {
+  color: #aaaaaa;
+  font-size: 0.95rem;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  font-style: italic;
+}

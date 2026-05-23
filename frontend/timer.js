@@ -1,60 +1,90 @@
-// timer.js
+// Helper function to convert raw API date/time strings into readable local time
+const formatSessionTime = (dateStr, timeStr) => {
+  if (!dateStr) return "TBD";
+  // If the API provides a time, combine them into a ISO string, otherwise parse date only
+  const dateObj = timeStr
+    ? new Date(`${dateStr}T${timeStr}`)
+    : new Date(dateStr);
+
+  // Format options: "Fri, May 22 • 3:30 PM"
+  return dateObj.toLocaleString([], {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 export const startCountdown = async () => {
   try {
-    // 1. Fetch the next upcoming race from the API
     const response = await fetch(
       "https://api.jolpi.ca/ergast/f1/current/next.json",
     );
     const data = await response.json();
 
-    // 2. Dig into the API layers to find the race details
     const nextRace = data.MRData.RaceTable.Races[0];
-    const raceName = nextRace.raceName;
 
-    // Combine the API's date and time strings into a format JavaScript understands
+    // 1. Inject Race Name
+    document.querySelector(".race-title").innerText = nextRace.raceName;
+
+    // 2. NEW: Inject Circuit Name and Location
+    const circuitName = nextRace.Circuit.circuitName;
+    const locality = nextRace.Circuit.Location.locality;
+    const country = nextRace.Circuit.Location.country;
+    document.getElementById("circuit-info").innerText =
+      `${circuitName} — ${locality}, ${country}`;
+
+    // 3. Setup Main Race Target Countdown Time
     const raceDate = new Date(`${nextRace.date}T${nextRace.time}`).getTime();
 
-    // 3. Automatically update the HTML title on the screen
-    document.querySelector(".race-title").innerText = raceName;
-
-    // --- NEW, CRASH-PROOF LOGIC: THE WEEKEND SCHEDULE ---
+    // 4. NEW: Format and display session times with local time conversion
     const scheduleBox = document.getElementById("weekend-schedule");
 
-    // Safely grab dates that exist in every weekend format
-    const fp1 = nextRace.FirstPractice?.date || "TBD";
-    const quali = nextRace.Qualifying?.date || "TBD";
+    const fp1 = formatSessionTime(
+      nextRace.FirstPractice?.date,
+      nextRace.FirstPractice?.time,
+    );
+    const quali = formatSessionTime(
+      nextRace.Qualifying?.date,
+      nextRace.Qualifying?.time,
+    );
 
-    // Check if the Sprint object exists
     if (nextRace.Sprint) {
-      // It IS a Sprint Weekend
-      // The API might use SprintQualifying, SprintShootout, or SecondPractice for this slot
-      const sprintQuali =
-        nextRace.SprintQualifying?.date ||
-        nextRace.SecondPractice?.date ||
-        "TBD";
-      const sprint = nextRace.Sprint?.date || "TBD";
+      const sprintQuali = formatSessionTime(
+        nextRace.SprintQualifying?.date || nextRace.SecondPractice?.date,
+        nextRace.SprintQualifying?.time || nextRace.SecondPractice?.time,
+      );
+      const sprint = formatSessionTime(
+        nextRace.Sprint?.date,
+        nextRace.Sprint?.time,
+      );
 
       scheduleBox.innerHTML = `
-            <div class="session"><span>FP1:</span> ${fp1}</div>
-            <div class="session"><span>Sprint Quali:</span> ${sprintQuali}</div>
-            <div class="session"><span>Sprint:</span> ${sprint}</div>
-            <div class="session"><span>Qualifying:</span> ${quali}</div>
+            <div class="session"><span>FP1</span> <span>${fp1}</span></div>
+            <div class="session"><span>Sprint Quali</span> <span>${sprintQuali}</span></div>
+            <div class="session"><span>Sprint Race</span> <span>${sprint}</span></div>
+            <div class="session"><span>Qualifying</span> <span>${quali}</span></div>
         `;
     } else {
-      // It is a STANDARD Weekend
-      // Use optional chaining just in case the API hasn't loaded these yet
-      const fp2 = nextRace.SecondPractice?.date || "TBD";
-      const fp3 = nextRace.ThirdPractice?.date || "TBD";
+      const fp2 = formatSessionTime(
+        nextRace.SecondPractice?.date,
+        nextRace.SecondPractice?.time,
+      );
+      const fp3 = formatSessionTime(
+        nextRace.ThirdPractice?.date,
+        nextRace.ThirdPractice?.time,
+      );
 
       scheduleBox.innerHTML = `
-            <div class="session"><span>FP1:</span> ${fp1}</div>
-            <div class="session"><span>FP2:</span> ${fp2}</div>
-            <div class="session"><span>FP3:</span> ${fp3}</div>
-            <div class="session"><span>Qualifying:</span> ${quali}</div>
+            <div class="session"><span>FP1</span> <span>${fp1}</span></div>
+            <div class="session"><span>FP2</span> <span>${fp2}</span></div>
+            <div class="session"><span>FP3</span> <span>${fp3}</span></div>
+            <div class="session"><span>Qualifying</span> <span>${quali}</span></div>
         `;
     }
-    // 4. Start the ticking clock using the live date
+
+    // 5. Live Countdown Interval Timer Loop
     const timerInterval = setInterval(() => {
       const now = new Date().getTime();
       const timeLeft = raceDate - now;

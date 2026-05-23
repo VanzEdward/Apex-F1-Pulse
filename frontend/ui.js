@@ -90,3 +90,34 @@ export const setupSearch = () => {
     renderTable(matchingDrivers);
   });
 };
+
+export const fetchAndRenderTeams = async () => {
+  try {
+    const response = await fetch("http://127.0.0.1:5000/api/constructors");
+    if (!response.ok) throw new Error("Failed to fetch team data");
+
+    const rawData = await response.json();
+
+    // Navigate structural layers of the response to access lists
+    const standingsList =
+      rawData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+    const teamRowsContainer = document.getElementById("team-rows");
+    teamRowsContainer.innerHTML = "";
+
+    standingsList.forEach((item) => {
+      const row = document.createElement("tr");
+
+      // Use your existing color coding function based on team name
+      row.style.borderLeft = `5px solid ${getTeamColor(item.Constructor.name)}`;
+
+      row.innerHTML = `
+        <td>${item.position}</td>
+        <td><strong>${item.Constructor.name}</strong> <span style="font-size:0.8rem; color:#888;">(${item.Constructor.nationality})</span></td>
+        <td>${item.points}</td>
+      `;
+      teamRowsContainer.appendChild(row);
+    });
+  } catch (error) {
+    console.error("Error drawing constructor table:", error);
+  }
+};
